@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Demo - Glass Blue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        :root {
+            --blue: #00a8ff;
+            --blue-dark: #006cff;
+            --white-glass: rgba(255, 255, 255, 0.10);
+            --border-glass: rgba(255, 255, 255, 0.18);
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: white;
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(0, 174, 255, 0.30),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at 85% 85%,
+                    rgba(0, 76, 255, 0.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #030811,
+                    #071a2d 50%,
+                    #02060c
+                );
+        }
+        /* Fondo */
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+        .glow-1 {
+            width: 280px;
+            height: 280px;
+            background: #008cff;
+            top: -100px;
+            left: -80px;
+            opacity: 0.35;
+        }
+        .glow-2 {
+            width: 300px;
+            height: 300px;
+            background: #0051ff;
+            right: -100px;
+            bottom: -100px;
+            opacity: 0.30;
+        }
+        .glow-3 {
+            width: 170px;
+            height: 170px;
+            background: #00c8ff;
+            right: 10%;
+            top: 45%;
+            opacity: 0.12;
+        }
+        .shape {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            transform: rotate(45deg);
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: floating 10s ease-in-out infinite;
+        }
+        .shape-1 {
+            left: 7%;
+            top: 12%;
+        }
+        .shape-2 {
+            right: 8%;
+            top: 18%;
+            width: 140px;
+            height: 140px;
+            animation-delay: 2s;
+        }
+        .shape-3 {
+            left: 12%;
+            bottom: 8%;
+            width: 130px;
+            height: 130px;
+            animation-delay: 4s;
+        }
+        @keyframes floating {
+            0%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            50% {
+                transform: rotate(52deg) translateY(-20px);
+            }
+        }
+        /* Contenedor */
+        .container {
+            width: 100%;
+            max-width: 430px;
+            padding: 20px;
+            position: relative;
+            z-index: 5;
+        }
+        /* Tarjeta Glass */
+        .card {
+            position: relative;
+            padding: 38px 32px 30px;
+            background: linear-gradient(
+                145deg,
+                rgba(255, 255, 255, 0.13),
+                rgba(255, 255, 255, 0.045)
+            );
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.55),
+                inset 0 1px 1px rgba(255, 255, 255, 0.18),
+                0 0 45px rgba(0, 145, 255, 0.10);
+            overflow: hidden;
+            animation: cardAppear 0.7s ease;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.75),
+                transparent
+            );
+        }
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        /* Logo */
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: linear-gradient(
+                145deg,
+                #ffffff,
+                #d8efff
+            );
+            box-shadow:
+                0 8px 30px rgba(0, 153, 255, 0.35),
+                inset 0 1px 2px white;
+            transform: rotate(-7deg);
+        }
+        .logo-inner {
+            width: 29px;
+            height: 29px;
+            background: #10151c;
+            transform: rotate(7deg);
+        }
+        /* Título */
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            text-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.35);
+        }
+        /* Aviso */
+        .warning {
+            padding: 11px 13px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            background: rgba(0, 153, 255, 0.08);
+            border: 1px solid rgba(0, 174, 255, 0.22);
+            color: #a1dcff;
+            font-size: 11px;
+            line-height: 1.45;
+            text-align: center;
+        }
+        /* Campos */
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #e6edf5;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .input-box {
+            position: relative;
+        }
+        .input-box input {
+            width: 100%;
+            height: 47px;
+            padding: 0 14px;
+            color: white;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 11px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.25s;
+        }
+        .input-box input::placeholder {
+            color: #8191a1;
+        }
+        .input-box input:focus {
+            border-color: rgba(0, 174, 255, 0.75);
+            box-shadow:
+                0 0 0 3px rgba(0, 174, 255, 0.08),
+                0 0 20px rgba(0, 174, 255, 0.10);
+        }
+        /* Mostrar contraseña */
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #83d4ff;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        /* Botón */
+        .login-button {
+            width: 100%;
+            height: 48px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(
+                135deg,
+                #00aaff,
+                #006cff
+            );
+            box-shadow:
+                0 8px 25px rgba(0, 132, 255, 0.30),
+                inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 12px 32px rgba(0, 132, 255, 0.42),
+                0 0 25px rgba(0, 174, 255, 0.18);
+        }
+        .login-button:active {
+            transform: scale(0.98);
+        }
+        /* Separador */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 25px 0;
+            color: #758596;
+            font-size: 11px;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.13);
+        }
+        /* Botones secundarios */
+        .secondary-button {
+            width: 100%;
+            height: 44px;
+            margin-bottom: 10px;
+            border-radius: 11px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            color: #e8f5ff;
+            background: rgba(255, 255, 255, 0.055);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .secondary-button:hover {
+            background: rgba(255, 255, 255, 0.10);
+            border-color: rgba(0, 174, 255, 0.35);
+        }
+        /* Links */
+        .links {
+            text-align: center;
+            margin-top: 19px;
+        }
+        .links a {
+            color: #69cbff;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        /* Registro */
+        .register {
+            text-align: center;
+            margin-top: 26px;
+            color: #8999a8;
+            font-size: 13px;
+        }
+        .register strong {
+            color: white;
+        }
+        /* Mensaje */
+        .message {
+            display: none;
+            margin-top: 14px;
+            padding: 11px;
+            border-radius: 10px;
+            background: rgba(0, 174, 255, 0.08);
+            border: 1px solid rgba(0, 174, 255, 0.30);
+            color: #91ddff;
+            text-align: center;
+            font-size: 12px;
+        }
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            color: #657687;
+            font-size: 10px;
+        }
+        /* Móvil */
+        @media (max-width: 480px) {
+            body {
+                overflow-y: auto;
+                padding: 20px 0;
+            }
+            .container {
+                padding: 14px;
+            }
+            .card {
+                padding: 30px 21px 25px;
+                border-radius: 21px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .shape {
+                opacity: 0.35;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+        <div class="glow glow-3"></div>
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <main class="container">
+        <section class="card">
+            <div class="logo">
+                <div class="logo-inner"></div>
+            </div>
+            <h1>Iniciar sesión</h1>
+            <div class="warning">
+                DEMO VISUAL<br>
+                Esta página es independiente y no está conectada
+                a Roblox ni almacena credenciales.
+            </div>
+            <form id="loginForm">
+                <div class="field">
+                    <label for="username">
+                        Usuario o correo electrónico
+                    </label>
+                    <div class="input-box">
+                        <input
+                            id="username"
+                            type="text"
+                            placeholder="Usuario de prueba"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="password">
+                        Contraseña de demostración
+                    </label>
+                    <div class="input-box">
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            autocomplete="off"
+                            required
+                        >
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="showPassword">
+                            Mostrar
+                        </button>
+                    </div>
+                </div>
+                <button
+                    type="submit"
+                    class="login-button">
+                    Iniciar sesión
+                </button>
+            </form>
+            <div
+                class="message"
+                id="message">
+                ✓ Demo completada. No se enviaron datos.
+            </div>
+            <div class="divider">
+                O
+            </div>
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="demoAction('Código QR')">
+                Continuar con código QR
+            </button>
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="demoAction('otro método')">
+                Usar otro método
+            </button>
+            <div class="links">
+                <a
+                    href="#"
+                    onclick="demoAction('Recuperación de cuenta'); return false;">
+                    ¿Olvidaste la contraseña?
+                </a>
+            </div>
+            <div class="register">
+                ¿No tienes una cuenta?
+                <strong>Crear una cuenta</strong>
+            </div>
+        </section>
+        <div class="footer">
+            Maqueta visual independiente · No afiliada a Roblox
+        </div>
+    </main>
+    <script>
+        const form = document.getElementById("loginForm");
+        const message = document.getElementById("message");
+        const password = document.getElementById("password");
+        const showPassword = document.getElementById("showPassword");
+        showPassword.addEventListener("click", function () {
+            if (password.type === "password") {
+                password.type = "text";
+                showPassword.textContent = "Ocultar";
+            } else {
+                password.type = "password";
+                showPassword.textContent = "Mostrar";
+            }
+        });
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            message.style.display = "block";
+            setTimeout(function () {
+                message.style.display = "none";
+            }, 3500);
+            form.reset();
+        });
+        function demoAction(action) {
+            alert(
+                "Función de demostración\n\n" +
+                action +
+                " no está conectada a ningún servicio."
+            );
+        }
+    </script>
+</body>
+</html>
